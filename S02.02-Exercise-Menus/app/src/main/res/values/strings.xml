@@ -24,8 +24,9 @@
     <!--or something similar.-->
     <string name="app_name">Sunshine</string>
 
-    <!--TODO (1) Add a string for the title of the refresh button, "Refresh"-->
-
+    <!--COMPLETED (1) Add a string for the title of the refresh button, "Refresh"-->
+    <string name="refresh_button">Refresh</string>
+    <string name="error_message">Failed to load data, please try again</string>
 
     <!-- - - - - - - - - - - - - -->
     <!--Used by SunshineDateUtils-->
