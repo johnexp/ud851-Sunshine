@@ -18,8 +18,10 @@ package com.example.android.sunshine;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.Uri.Builder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat.IntentBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -68,8 +70,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
          * parameter is useful mostly for HORIZONTAL layouts that should reverse for right to left
          * languages.
          */
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(layoutManager);
 
@@ -102,8 +103,8 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
     }
 
     /**
-     * This method will get the user's preferred location for weather, and then tell some
-     * background method to get the weather data in the background.
+     * This method will get the user's preferred location for weather, and then tell some background method to get the
+     * weather data in the background.
      */
     private void loadWeatherData() {
         showWeatherDataView();
@@ -113,8 +114,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
     }
 
     /**
-     * This method is overridden by our MainActivity class in order to handle RecyclerView item
-     * clicks.
+     * This method is overridden by our MainActivity class in order to handle RecyclerView item clicks.
      *
      * @param weatherForDay The weather for the day that was clicked
      */
@@ -128,11 +128,10 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
     }
 
     /**
-     * This method will make the View for the weather data visible and
-     * hide the error message.
+     * This method will make the View for the weather data visible and hide the error message.
      * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
+     * Since it is okay to redundantly set the visibility of a View, we don't need to check whether each view is
+     * currently visible or invisible.
      */
     private void showWeatherDataView() {
         /* First, make sure the error is invisible */
@@ -142,11 +141,10 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
     }
 
     /**
-     * This method will make the error message visible and hide the weather
-     * View.
+     * This method will make the error message visible and hide the weather View.
      * <p>
-     * Since it is okay to redundantly set the visibility of a View, we don't
-     * need to check whether each view is currently visible or invisible.
+     * Since it is okay to redundantly set the visibility of a View, we don't need to check whether each view is
+     * currently visible or invisible.
      */
     private void showErrorMessage() {
         /* First, hide the currently visible data */
@@ -175,11 +173,10 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
             URL weatherRequestUrl = NetworkUtils.buildUrl(location);
 
             try {
-                String jsonWeatherResponse = NetworkUtils
-                        .getResponseFromHttpUrl(weatherRequestUrl);
+                String jsonWeatherResponse = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl);
 
-                String[] simpleJsonWeatherData = OpenWeatherJsonUtils
-                        .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
+                String[] simpleJsonWeatherData = OpenWeatherJsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,
+                        jsonWeatherResponse);
 
                 return simpleJsonWeatherData;
 
@@ -221,8 +218,27 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
             return true;
         }
 
-        // TODO (2) Launch the map when the map menu item is clicked
+        // COMPLETED (2) Launch the map when the map menu item is clicked
+        if (id == R.id.action_open_map) {
+            showMap(getLocationUri());
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public Uri getLocationUri() {
+        String address = "Rua dos Inconfidentes, 1100-1202 - Funcionários";
+        Builder builder = new Uri.Builder();
+        builder.scheme("geo").path("0,0").query(address);
+        return builder.build();
+    }
+
+    private void showMap(Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }
